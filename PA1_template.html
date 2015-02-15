@@ -92,8 +92,9 @@ processedDF$date &lt;- ymd(processedDF$date)
 <pre class="r"><code>#Remove NAs
 #make a copy first for further use
 processedDF1 &lt;- processedDF
-processedDF &lt;- processedDF[complete.cases(processedDF),]</code></pre>
-<pre class="r"><code>## calculate the total steps per day
+processedDF &lt;- processedDF[complete.cases(processedDF),]
+
+## calculate the total steps per day
 calculatedDF1 &lt;- sqldf(&quot;select date, sum(steps) AS TotalSteps 
                          from processedDF group by date&quot;)</code></pre>
 <div id="barplot-versus-histogram" class="section level4">
@@ -115,10 +116,13 @@ dev.off()</code></pre>
 <pre class="r"><code>stepsmean &lt;- format(round(mean(calculatedDF1$TotalSteps),2), nsmall=2)                         
 stepsmedian &lt;- format(round(median(calculatedDF1$TotalSteps),2), nsmall=2)
 #the printing of r parameters in sentences in R Markdown works in RStudio but it does not in GitHub, showing then the results here
-cat(paste(&quot;Mean total number of steps is&quot;,stepsmean))</code></pre>
-<pre><code>## Mean total number of steps is 10766.19</code></pre>
-<pre class="r"><code>cat(paste(&quot;Median total number of steps is&quot;,stepsmedian))</code></pre>
-<pre><code>## Median total number of steps is 10765.00</code></pre>
+print(paste(&quot;Mean total number of steps is&quot;,stepsmean))</code></pre>
+<pre><code>## [1] &quot;Mean total number of steps is 10766.19&quot;</code></pre>
+<pre class="r"><code>print(paste(&quot;Median total number of steps is&quot;,stepsmedian))</code></pre>
+<pre><code>## [1] &quot;Median total number of steps is 10765.00&quot;</code></pre>
+</div>
+<div id="the-mean-total-number-of-steps-is-10766.19" class="section level4">
+<h4>The Mean total number of steps is 10766.19</h4>
 </div>
 </div>
 <div id="what-is-the-average-daily-activity-pattern" class="section level2">
@@ -149,9 +153,9 @@ maxinterval &lt;- str_pad(maxinterval,4,pad=&quot;0&quot;)
 maxinterval &lt;- paste(substr(maxinterval,1,2),&quot;:&quot;,
         substr(maxinterval,3,4),sep=&quot;&quot;)
 #the printing of r parameters in sentences in R Markdown works in RStudio but it does not in GitHub, showing then the results here
-cat(paste(&quot;The 5 minute interval with the average maximum number of steps is&quot;
+print(paste(&quot;The 5 minute interval with the average maximum number of steps is&quot;
           ,maxinterval))</code></pre>
-<pre><code>## The 5 minute interval with the average maximum number of steps is 08:35</code></pre>
+<pre><code>## [1] &quot;The 5 minute interval with the average maximum number of steps is 08:35&quot;</code></pre>
 </div>
 <div id="imputing-missing-values" class="section level2">
 <h2>Imputing missing values</h2>
@@ -159,9 +163,9 @@ cat(paste(&quot;The 5 minute interval with the average maximum number of steps i
 <pre class="r"><code>#By inspection, we see that the NAs appear only in the column &quot;steps&quot;
 NAtotal &lt;- sum(is.na(processedDF1))
 #the printing of r parameters in sentences in R Markdown works in RStudio but it does not in GitHub, showing then the results here
-cat(paste(&quot;The total number of missing values in the dataset is&quot;
+print(paste(&quot;The total number of missing values in the dataset is&quot;
           ,NAtotal))</code></pre>
-<pre><code>## The total number of missing values in the dataset is 2304</code></pre>
+<pre><code>## [1] &quot;The total number of missing values in the dataset is 2304&quot;</code></pre>
 <p><em>2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.</em></p>
 <div id="the-strategy-is-to-replace-with-the-mean-value-for-the-specific-interval-calculated-with-the-complete.cases-initial-data-set-and-stored-in-calculateddf2" class="section level5">
 <h5>The strategy is to replace with the mean value for the specific interval calculated with the complete.cases initial data set and stored in calculatedDF2</h5>
@@ -188,27 +192,27 @@ dev.off()</code></pre>
 <pre class="r"><code>#the printing of r parameters in sentences in R Markdown works in RStudio but it does not in GitHub, showing then the results here
 
 stepsmean1 &lt;- format(round(mean(calculatedDF3$TotalSteps),2), nsmall=2)
-cat(paste(&quot;The mean of the total number of steps taken per day is&quot;
+print(paste(&quot;The mean of the total number of steps taken per day is&quot;
           ,stepsmean1))</code></pre>
-<pre><code>## The mean of the total number of steps taken per day is 10766.19</code></pre>
+<pre><code>## [1] &quot;The mean of the total number of steps taken per day is 10766.19&quot;</code></pre>
 <pre class="r"><code>stepsmedian1 &lt;- format(round(median(calculatedDF3$TotalSteps),2), nsmall=2)
-cat(paste(&quot;The median of the total number of steps taken per day is&quot;
+print(paste(&quot;The median of the total number of steps taken per day is&quot;
           ,stepsmedian1))</code></pre>
-<pre><code>## The median of the total number of steps taken per day is 10766.19</code></pre>
+<pre><code>## [1] &quot;The median of the total number of steps taken per day is 10766.19&quot;</code></pre>
 <pre class="r"><code>if(stepsmean==stepsmean1) {
         meancomparison &lt;- &quot;the same value&quot;
 } else {
         meancomparison &lt;- &quot;different values&quot;
 }
-cat(paste(&quot;When comparing this mean value with the first part of the assesment they have&quot;,meancomparison))</code></pre>
-<pre><code>## When comparing this mean value with the first part of the assesment they have the same value</code></pre>
+print(paste(&quot;When comparing this mean value with the first part of the assesment they have&quot;,meancomparison))</code></pre>
+<pre><code>## [1] &quot;When comparing this mean value with the first part of the assesment they have the same value&quot;</code></pre>
 <pre class="r"><code>if(stepsmedian==stepsmedian1) {
         mediancomparison &lt;- &quot;the same value&quot;
 } else {
         mediancomparison &lt;- &quot;different values&quot;
 }
-cat(paste(&quot;When comparing this median value with the first part of the assesment they have&quot;,mediancomparison))</code></pre>
-<pre><code>## When comparing this median value with the first part of the assesment they have different values</code></pre>
+print(paste(&quot;When comparing this median value with the first part of the assesment they have&quot;,mediancomparison))</code></pre>
+<pre><code>## [1] &quot;When comparing this median value with the first part of the assesment they have different values&quot;</code></pre>
 <p><img src="data:image/png;base64,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" alt="Plot 3" /></p>
 </div>
 </div>

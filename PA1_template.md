@@ -41,7 +41,8 @@ processedDF$date <- ymd(processedDF$date)
 
 ## What is mean total number of steps taken per day?
 
-_1. Calculate the total number of steps taken per day_
+_1. Calculate the total number of steps taken per day_  
+
 - The processed set is copied for use in a future step
 - NA rows are removed from the processed set
 
@@ -60,19 +61,22 @@ calculatedDF1 <- sqldf("select date, sum(steps) AS TotalSteps
 #### Barplot versus Histogram
 a Barplot will show the 53 days in the horizontal axis with the number of steps
 in the vertical axis, and each data point will show as a bar
-a [histogram](http://en.wikipedia.org/wiki/Histogram)
-A histogram is a graphical representation of the distribution of data. 
-It is an estimate of the probability distribution of a continuous variable 
-(quantitative variable) and was first introduced by Karl Pearson.
 
-2. Histogram of the total number of steps taken each day
+_A [Histogram](http://en.wikipedia.org/wiki/Histogram) is a graphical representation of the distribution of data. It is an estimate of the probability distribution of a continuous variable (quantitative variable) and was first introduced by Karl Pearson._
+
+_2. Histogram of the total number of steps taken each day_
 
 ```r
+#Mean needed here to add to plot
+stepsmean <- format(round(mean(calculatedDF1$TotalSteps),2), nsmall=2)                         
+stepsmedian <- format(round(median(calculatedDF1$TotalSteps),2), nsmall=2)
+
 png("./figure/plot1.png",width=480,height=480,units="px")
 hist(calculatedDF1$TotalSteps,
      main="Histogram - Daily Steps - Version 1",
      xlab="Total Steps",
      col=5)
+abline(v = stepsmean, col = "blue", lwd = 2)
 dev.off()
 ```
 
@@ -85,25 +89,8 @@ dev.off()
 
 _3. Calculate and report the mean and median of the total number of steps taken per day_
 
-```r
-stepsmean <- format(round(mean(calculatedDF1$TotalSteps),2), nsmall=2)                         
-stepsmedian <- format(round(median(calculatedDF1$TotalSteps),2), nsmall=2)
-#the printing of r parameters in sentences in R Markdown works in RStudio but it does not in GitHub, showing then the results here
-print(paste("Mean total number of steps is",stepsmean))
-```
-
-```
-## [1] "Mean total number of steps is 10766.19"
-```
-
-```r
-print(paste("Median total number of steps is",stepsmedian))
-```
-
-```
-## [1] "Median total number of steps is 10765.00"
-```
 #### The Mean total number of steps is 10766.19####
+#### Median total number of steps is 10765.00####
 
 ## What is the average daily activity pattern?
 
@@ -115,6 +102,14 @@ _1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) 
 calculatedDF2 <- sqldf("select interval, avg(steps) AS meanstep 
                          from processedDF group by interval")
 
+#Find the corresponding interval to which the mean number of steps is the
+#maximum (to use in the plot)
+maxinterval <- calculatedDF2[calculatedDF2$meanstep
+                             ==max(calculatedDF2$meanstep),1]
+maxintervalch <- str_pad(maxinterval,4,pad="0")
+maxintervalch <- paste(substr(maxintervalch,1,2),":",
+        substr(maxintervalch,3,4),sep="")
+
 #plot it
 png("./figure/plot2.png",width=480,height=480,units="px")
 plot(calculatedDF2,type="l",
@@ -123,6 +118,7 @@ plot(calculatedDF2,type="l",
      xlab="Interval",
      ylab="Average number of steps",
      col=4)
+abline(v = maxinterval, col = "green", lwd = 2)
 dev.off()
 ```
 
@@ -134,23 +130,7 @@ dev.off()
 
 _2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?_
 
-
-```r
-#Find the corresponding interval to which the mean number of steps is the
-#maximum
-maxinterval <- calculatedDF2[calculatedDF2$meanstep
-                             ==max(calculatedDF2$meanstep),1]
-maxinterval <- str_pad(maxinterval,4,pad="0")
-maxinterval <- paste(substr(maxinterval,1,2),":",
-        substr(maxinterval,3,4),sep="")
-#the printing of r parameters in sentences in R Markdown works in RStudio but it does not in GitHub, showing then the results here
-print(paste("The 5 minute interval with the average maximum number of steps is"
-          ,maxinterval))
-```
-
-```
-## [1] "The 5 minute interval with the average maximum number of steps is 08:35"
-```
+#### The 5 minute interval with the average maximum number of steps is 08:35 #### 
 
 ## Imputing missing values
 _1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)_
@@ -158,14 +138,8 @@ _1. Calculate and report the total number of missing values in the dataset (i.e.
 ```r
 #By inspection, we see that the NAs appear only in the column "steps"
 NAtotal <- sum(is.na(processedDF1))
-#the printing of r parameters in sentences in R Markdown works in RStudio but it does not in GitHub, showing then the results here
-print(paste("The total number of missing values in the dataset is"
-          ,NAtotal))
 ```
-
-```
-## [1] "The total number of missing values in the dataset is 2304"
-```
+#### The total number of missing values in the dataset is 2304 ####
 
 _2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc._
 
@@ -191,11 +165,17 @@ _4. Make a histogram of the total number of steps taken each day and Calculate a
 ## calculate the total steps per day
 calculatedDF3 <- sqldf("select date, sum(steps) AS TotalSteps 
                          from processedDF1 group by date")
+
+stepsmean1 <- format(round(mean(calculatedDF3$TotalSteps),2), nsmall=2)
+
+stepsmedian1 <- format(round(median(calculatedDF3$TotalSteps),2), nsmall=2)
+
 png("./figure/plot3.png",width=480,height=480,units="px")
 hist(calculatedDF3$TotalSteps,
      main="Histogram - Daily Steps - Version 2",
      xlab="Total Steps",
      col=6)
+abline(v = stepsmean1, col = "black", lwd = 2)
 dev.off()
 ```
 
@@ -205,52 +185,25 @@ dev.off()
 ```
 
 ```r
-#the printing of r parameters in sentences in R Markdown works in RStudio but it does not in GitHub, showing then the results here
-
-stepsmean1 <- format(round(mean(calculatedDF3$TotalSteps),2), nsmall=2)
-print(paste("The mean of the total number of steps taken per day is"
-          ,stepsmean1))
-```
-
-```
-## [1] "The mean of the total number of steps taken per day is 10766.19"
-```
-
-```r
-stepsmedian1 <- format(round(median(calculatedDF3$TotalSteps),2), nsmall=2)
-print(paste("The median of the total number of steps taken per day is"
-          ,stepsmedian1))
-```
-
-```
-## [1] "The median of the total number of steps taken per day is 10766.19"
-```
-
-```r
 if(stepsmean==stepsmean1) {
         meancomparison <- "the same value"
 } else {
         meancomparison <- "different values"
 }
-print(paste("When comparing this mean value with the first part of the assesment they have",meancomparison))
-```
 
-```
-## [1] "When comparing this mean value with the first part of the assesment they have the same value"
-```
-
-```r
 if(stepsmedian==stepsmedian1) {
         mediancomparison <- "the same value"
 } else {
         mediancomparison <- "different values"
 }
-print(paste("When comparing this median value with the first part of the assesment they have",mediancomparison))
 ```
+#### The mean of the total number of steps taken per day is 10766.19 ####
 
-```
-## [1] "When comparing this median value with the first part of the assesment they have different values"
-```
+#### The median of the total number of steps taken per day is 10766.19 ####
+
+#### When comparing this mean value with the first part of the assesment they have the same value ####
+
+#### When comparing this median value with the first part of the assesment they have different values ####
 ![Plot 3](./figure/plot3.png)
 
 ## Are there differences in activity patterns between weekdays and weekends?

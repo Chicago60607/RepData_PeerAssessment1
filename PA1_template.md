@@ -1,15 +1,11 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-author: "Alfonzo Vega"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
+Alfonzo Vega  
 
 
 ## Loading and preprocessing the data
 0. Load all required libraries
-```{r}
+
+```r
 library(proto,quietly=TRUE)
 library(DBI,quietly=TRUE)
 library(tcltk,quietly=TRUE)
@@ -25,7 +21,8 @@ library(lattice,quietly=TRUE)
 
 3. Load activity file a data frame
 
-```{r}
+
+```r
 datazipfile <- "activity.zip"
 unzip(datazipfile)
 activityfile <- "activity.csv"
@@ -34,7 +31,8 @@ activityDF <- read.csv(activityfile)
 
 4. Processing - converting text field to a date
 
-```{r}
+
+```r
 processedDF <- activityDF
 processedDF$date <- ymd(processedDF$date)
 #the intervals go from 5 to 2355, i.e.
@@ -47,14 +45,16 @@ _1. Calculate the total number of steps taken per day_
 - The processed set is copied for use in a future step
 - NA rows are removed from the processed set
 
-```{r}
+
+```r
 #Remove NAs
 #make a copy first for further use
 processedDF1 <- processedDF
 processedDF <- processedDF[complete.cases(processedDF),]
 ```
 
-```{r}
+
+```r
 ## calculate the total steps per day
 calculatedDF1 <- sqldf("select date, sum(steps) AS TotalSteps 
                          from processedDF group by date")
@@ -69,7 +69,8 @@ It is an estimate of the probability distribution of a continuous variable
 (quantitative variable) and was first introduced by Karl Pearson.
 
 2. Histogram of the total number of steps taken each day
-```{r}
+
+```r
 png("./figure/plot1.png",width=480,height=480,units="px")
 hist(calculatedDF1$TotalSteps,
      main="Histogram - Daily Steps - Version 1",
@@ -78,20 +79,27 @@ hist(calculatedDF1$TotalSteps,
 dev.off()
 ```
 
+```
+## png 
+##   2
+```
+
 ![Plot 1](./figure/plot1.png)
 
 _3. Calculate and report the mean and median of the total number of steps taken per day_
-```{r}
+
+```r
 stepsmean <- format(round(mean(calculatedDF1$TotalSteps),2), nsmall=2)                         
 stepsmedian <- format(round(median(calculatedDF1$TotalSteps),2), nsmall=2)
 ```
-#### The mean of the total number of steps taken per day is `r stepsmean` and the median is `r stepsmedian`
+#### The mean of the total number of steps taken per day is 10766.19 and the median is 10765.00
 
 ## What is the average daily activity pattern?
 
 _1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)_
 
-```{r}
+
+```r
 #get the average of all steps in a column and the step in another
 calculatedDF2 <- sqldf("select interval, avg(steps) AS meanstep 
                          from processedDF group by interval")
@@ -106,11 +114,17 @@ plot(calculatedDF2,type="l",
      col=4)
 dev.off()
 ```
+
+```
+## png 
+##   2
+```
 ![Plot 2](./figure/plot2.png)
 
 _2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?_
 
-```{r}
+
+```r
 #Find the corresponding interval to which the mean number of steps is the
 #maximum
 maxinterval <- calculatedDF2[calculatedDF2$meanstep
@@ -119,15 +133,16 @@ maxinterval <- str_pad(maxinterval,4,pad="0")
 maxinterval <- paste(substr(maxinterval,1,2),":",
         substr(maxinterval,3,4),sep="")
 ```
-#### The 5 minute interval with the average maximum number of steps is `r maxinterval`
+#### The 5 minute interval with the average maximum number of steps is 08:35
 
 ## Imputing missing values
 _1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)_
-```{r}
+
+```r
 #By inspection, we see that the NAs appear only in the column "steps"
 NAtotal <- sum(is.na(processedDF1))
 ```
-#### The total number of missing values in the dataset is `r NAtotal`
+#### The total number of missing values in the dataset is 2304
 
 _2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc._
 
@@ -135,7 +150,8 @@ _2. Devise a strategy for filling in all of the missing values in the dataset. T
 
 _3. Create a new dataset that is equal to the original dataset but with the missing data filled in._
 
-```{r}
+
+```r
 for (i in 1:nrow(processedDF1)) {
         if (is.na(processedDF1$steps[i])) {
                 processedDF1$steps[i] <-
@@ -147,7 +163,8 @@ for (i in 1:nrow(processedDF1)) {
 
 _4. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?_
 
-```{r}
+
+```r
 ## calculate the total steps per day
 calculatedDF3 <- sqldf("select date, sum(steps) AS TotalSteps 
                          from processedDF1 group by date")
@@ -157,7 +174,14 @@ hist(calculatedDF3$TotalSteps,
      xlab="Total Steps",
      col=6)
 dev.off()
+```
 
+```
+## png 
+##   2
+```
+
+```r
 stepsmean1 <- format(round(mean(calculatedDF3$TotalSteps),2), nsmall=2)
 
 stepsmedian1 <- format(round(median(calculatedDF3$TotalSteps),2), nsmall=2)
@@ -175,11 +199,11 @@ if(stepsmedian==stepsmedian1) {
 ```
 ![Plot 3](./figure/plot3.png)
 
-#### The mean of the total number of steps taken per day is `r stepsmean1` and the median is `r stepsmedian1`
+#### The mean of the total number of steps taken per day is 10766.19 and the median is 10766.19
 
-#### When comparing this mean value with the first part of the assesment they have `r meancomparison`
+#### When comparing this mean value with the first part of the assesment they have the same value
 
-#### When comparing this median value with the first part of the assesment they have `r mediancomparison`
+#### When comparing this median value with the first part of the assesment they have different values
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -187,7 +211,8 @@ _1. Create a new factor variable in the dataset with two levels - "weekday" and 
 
 This [stack overflow link]("http://stackoverflow.com/questions/16570302/how-to-add-a-factor-column-to-dataframe-based-on-a-conditional-statement-from-an") helped to implement this solution
 
-```{r}
+
+```r
 processedDF1$fv <- as.factor(ifelse(
         weekdays(processedDF1$date)=="Saturday",
         "weekend", 
@@ -198,7 +223,8 @@ processedDF1$fv <- as.factor(ifelse(
 
 _2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis)._ 
 
-```{r}
+
+```r
 #get the average of all steps in a column and the interval and factor in another
 calculatedDF4 <- sqldf("select interval, fv, avg(steps) AS meanstep 
                          from processedDF1 group by interval, fv")
@@ -209,6 +235,11 @@ xyplot(meanstep ~ interval | fv,
        type="l",ylab="number of steps",
        main="Comparison steps weekdays and weekends")
 dev.off()
+```
+
+```
+## png 
+##   2
 ```
 
 ![Plot 4](./figure/plot4.png)

@@ -1,7 +1,6 @@
 # Reproducible Research: Peer Assessment 1
 Alfonzo Vega  
 
-
 ## Loading and preprocessing the data
 0. Load all required libraries
 
@@ -104,8 +103,9 @@ calculatedDF2 <- sqldf("select interval, avg(steps) AS meanstep
 
 #Find the corresponding interval to which the mean number of steps is the
 #maximum (to use in the plot)
+maxsteps <- max(calculatedDF2$meanstep)
 maxinterval <- calculatedDF2[calculatedDF2$meanstep
-                             ==max(calculatedDF2$meanstep),1]
+                             ==maxsteps,1]
 maxintervalch <- str_pad(maxinterval,4,pad="0")
 maxintervalch <- paste(substr(maxintervalch,1,2),":",
         substr(maxintervalch,3,4),sep="")
@@ -119,6 +119,7 @@ plot(calculatedDF2,type="l",
      ylab="Average number of steps",
      col=4)
 abline(v = maxinterval, col = "green", lwd = 2)
+abline(h = maxsteps, col = "green", lwd = 2)
 dev.off()
 ```
 
@@ -126,11 +127,15 @@ dev.off()
 ## png 
 ##   2
 ```
+
+```r
+maxsteps <- format(round(maxsteps,2), nsmall=2)                         
+```
 ![Plot 2](./figure/plot2.png)
 
 _2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?_
 
-#### The 5 minutes interval with the maximum average number steps is 08:35 
+#### The 5 minutes interval with the maximum average number steps is 08:35 and the maximum average number is 206.17
 
 ## Imputing missing values
 _1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)_

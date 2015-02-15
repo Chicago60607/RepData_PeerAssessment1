@@ -91,9 +91,21 @@ _3. Calculate and report the mean and median of the total number of steps taken 
 ```r
 stepsmean <- format(round(mean(calculatedDF1$TotalSteps),2), nsmall=2)                         
 stepsmedian <- format(round(median(calculatedDF1$TotalSteps),2), nsmall=2)
+#the printing of r parameters in sentences in R Markdown works in RStudio but it does not in GitHub, showing then the results here
+cat(paste("Mean total number of steps is",stepsmean))
 ```
-#### The mean of the total number of steps taken per day is 10766.19 and the median is 10765.00
 
+```
+## Mean total number of steps is 10766.19
+```
+
+```r
+cat(paste("Median total number of steps is",stepsmedian))
+```
+
+```
+## Median total number of steps is 10765.00
+```
 ## What is the average daily activity pattern?
 
 _1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)_
@@ -132,8 +144,14 @@ maxinterval <- calculatedDF2[calculatedDF2$meanstep
 maxinterval <- str_pad(maxinterval,4,pad="0")
 maxinterval <- paste(substr(maxinterval,1,2),":",
         substr(maxinterval,3,4),sep="")
+#the printing of r parameters in sentences in R Markdown works in RStudio but it does not in GitHub, showing then the results here
+cat(paste("The 5 minute interval with the average maximum number of steps is"
+          ,maxinterval))
 ```
-#### The 5 minute interval with the average maximum number of steps is 08:35
+
+```
+## The 5 minute interval with the average maximum number of steps is 08:35
+```
 
 ## Imputing missing values
 _1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)_
@@ -141,8 +159,14 @@ _1. Calculate and report the total number of missing values in the dataset (i.e.
 ```r
 #By inspection, we see that the NAs appear only in the column "steps"
 NAtotal <- sum(is.na(processedDF1))
+#the printing of r parameters in sentences in R Markdown works in RStudio but it does not in GitHub, showing then the results here
+cat(paste("The total number of missing values in the dataset is"
+          ,NAtotal))
 ```
-#### The total number of missing values in the dataset is 2304
+
+```
+## The total number of missing values in the dataset is 2304
+```
 
 _2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc._
 
@@ -182,28 +206,53 @@ dev.off()
 ```
 
 ```r
+#the printing of r parameters in sentences in R Markdown works in RStudio but it does not in GitHub, showing then the results here
+
 stepsmean1 <- format(round(mean(calculatedDF3$TotalSteps),2), nsmall=2)
+cat(paste("The mean of the total number of steps taken per day is"
+          ,stepsmean1))
+```
 
+```
+## The mean of the total number of steps taken per day is 10766.19
+```
+
+```r
 stepsmedian1 <- format(round(median(calculatedDF3$TotalSteps),2), nsmall=2)
+cat(paste("The median of the total number of steps taken per day is"
+          ,stepsmedian1))
+```
 
+```
+## The median of the total number of steps taken per day is 10766.19
+```
+
+```r
 if(stepsmean==stepsmean1) {
         meancomparison <- "the same value"
 } else {
         meancomparison <- "different values"
 }
+cat(paste("When comparing this mean value with the first part of the assesment they have",meancomparison))
+```
+
+```
+## When comparing this mean value with the first part of the assesment they have the same value
+```
+
+```r
 if(stepsmedian==stepsmedian1) {
         mediancomparison <- "the same value"
 } else {
         mediancomparison <- "different values"
 }
+cat(paste("When comparing this median value with the first part of the assesment they have",mediancomparison))
+```
+
+```
+## When comparing this median value with the first part of the assesment they have different values
 ```
 ![Plot 3](./figure/plot3.png)
-
-#### The mean of the total number of steps taken per day is 10766.19 and the median is 10766.19
-
-#### When comparing this mean value with the first part of the assesment they have the same value
-
-#### When comparing this median value with the first part of the assesment they have different values
 
 ## Are there differences in activity patterns between weekdays and weekends?
 

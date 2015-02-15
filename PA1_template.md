@@ -89,8 +89,8 @@ dev.off()
 
 _3. Calculate and report the mean and median of the total number of steps taken per day_
 
-#### The Mean total number of steps is 10766.19####
-#### Median total number of steps is 10765.00####
+#### The Mean total number of steps is 10766.19
+#### Median total number of steps is 10765.00
 
 ## What is the average daily activity pattern?
 
@@ -130,7 +130,7 @@ dev.off()
 
 _2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?_
 
-#### The 5 min interval with the average max num steps is 08:35#### 
+#### The 5 minutes interval with the maximum average number steps is 08:35 
 
 ## Imputing missing values
 _1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)_
@@ -139,7 +139,7 @@ _1. Calculate and report the total number of missing values in the dataset (i.e.
 #By inspection, we see that the NAs appear only in the column "steps"
 NAtotal <- sum(is.na(processedDF1))
 ```
-#### The total number of missing values in the dataset is 2304 ####
+#### The total number of missing values in the dataset is 2304 
 
 _2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc._
 
@@ -197,13 +197,13 @@ if(stepsmedian==stepsmedian1) {
         mediancomparison <- "different values"
 }
 ```
-#### The mean of the total number of steps taken per day is 10766.19 ####
+#### The mean of the total number of steps taken per day is 10766.19 
 
-#### The median of the total number of steps taken per day is 10766.19 ####
+#### The median of the total number of steps taken per day is 10766.19
 
-#### When comparing this mean value with the first part of the assesment they have the same value ####
+#### When comparing this mean value with the first part of the assesment they have the same value
 
-#### When comparing this median value with the first part of the assesment they have different values ####
+#### When comparing this median value with the first part of the assesment they have different values
 ![Plot 3](./figure/plot3.png)
 
 ## Are there differences in activity patterns between weekdays and weekends?
